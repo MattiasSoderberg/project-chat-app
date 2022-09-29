@@ -1,8 +1,26 @@
-import { hash } from 'bcryptjs'
-import { createUser } from '../models/users-repository'
+import { UserCredentials } from '@chat-app/shared'
+import { hash, compare } from 'bcryptjs'
+import { sign } from 'jsonwebtoken'
+import { createUser, getUserByUsername } from '../models/users-repository'
 
-export const saveNewUser = async (body) => {
-    const { username, password } = body
+export const saveNewUser = async (userCredentials: UserCredentials) => {
+    const { username, password } = userCredentials
 
-    console.log(username, "service")
+    const hashedPassword = await hash(password, 8)
+    
+    return await createUser(username, hashedPassword)
+    
+}
+
+export const loginUser = async (userCredetials: UserCredentials) => {
+    const { username, password } = userCredetials
+
+    const user = await getUserByUsername(username)
+    const hashedPassword = String(user.rows[0].password)
+
+    if (user) {
+        if (await compare(password, hashedPassword)) {
+            return sign(username, String(process.env.JWT_SECRET))
+        }
+    }
 }
