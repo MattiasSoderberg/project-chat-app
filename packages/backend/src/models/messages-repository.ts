@@ -9,7 +9,7 @@ export const getAllMessages = async () => {
 
 export const getAllMessagesNotByUser = async (authorId: number) => {
     return (await pool).connect(async (connection) => {
-        return await connection.query(sql`SELECT * FROM messages WHERE id IS NOT authorId`)
+        return await connection.query(sql`SELECT * FROM messages WHERE id != authorId`)
     })
 }
 
@@ -21,7 +21,11 @@ export const getMessagesByUserId = async (authorId: number) => {
 
 export const createMessage = async (text: string, authorId: number) => {
     return (await pool).connect(async (connection) => {
-        return await connection.query(sql`INSERT INTO messages (text, author)
-        VALUES (${text}, ${authorId})`)
+        try {
+            return await connection.query(sql`INSERT INTO messages (text, author)
+            VALUES (${text}, ${authorId})`)
+        } catch (err) {
+            console.error(err)
+        }
     })
 }
