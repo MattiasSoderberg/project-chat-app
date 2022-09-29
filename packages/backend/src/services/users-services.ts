@@ -25,3 +25,8 @@ export const loginUser = async (userCredetials: UserCredentials) => {
         }
     }
 }
+
+export const loadLoggedInUser = async (username: string) => {
+    const user = await getUserByUsername(username)
+    return user.rows[0]
+}

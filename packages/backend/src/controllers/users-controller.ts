@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express'
 import { createUser, getUsers } from '../models/users-repository'
-import { loginUser, saveNewUser } from '../services/users-services'
+import { loadLoggedInUser, loginUser, saveNewUser } from '../services/users-services'
 import { UserCredentials } from '@chat-app/shared'
+import { auth, CustomRequest } from '../middlewares/auth'
 
 const usersRouter = express.Router()
 
@@ -21,6 +22,10 @@ usersRouter.post("/", async (req: Request<UserCredentials>, res: Response) => {
 usersRouter.post("/login", async (req: Request<UserCredentials>, res: Response) => {
     const token = await loginUser(req.body)
     res.status(200).json({token})
+})
+
+usersRouter.get("/me", auth, async (req: Request, res: Response) => {
+    res.send(await loadLoggedInUser(String((req as CustomRequest).user)))
 })
 
 export default usersRouter

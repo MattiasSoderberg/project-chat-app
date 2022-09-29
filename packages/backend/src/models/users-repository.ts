@@ -24,6 +24,6 @@ export const createUser = async (username: string, password: string) => {
 
 export const getUserByUsername = async (username: string) => {
     return (await pool).connect(async connection => {
-        return await connection.query(sql`SELECT * FROM users WHERE username = ${username}`)
+        return await connection.query(sql`SELECT id, username, created_at FROM users WHERE username = ${username}`)
     })
 }
