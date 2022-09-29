@@ -16,12 +16,12 @@ export const loginUser = async (userCredetials: UserCredentials) => {
     const { username, password } = userCredetials
 
     const user = await getUserByUsername(username)
-    const userId = user.rows[0].id
+    // const userId = user.rows[0].id
     const hashedPassword = String(user.rows[0].password)
 
     if (user) {
         if (await compare(password, hashedPassword)) {
-            return sign({ username, id: userId }, String(process.env.JWT_SECRET))
+            return sign(username, String(process.env.JWT_SECRET))
         }
     }
 }
