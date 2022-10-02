@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {
     Heading,
     Input,
-    Button
+    Button,
+    Text
 } from '@chakra-ui/react'
 import Message from '../components/Message'
 
@@ -21,19 +22,23 @@ type userType = {
     id: number
 }
 
-const config = {
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
-    }
-}
-
 const fetchMessages = async () => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
+        }
+    }
     const response = await axios.get('/messages', config)
     // console.log(response.data.rows[0].text)
     return response.data.rows
 }
 
 const fetchUser = async () => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
+        }
+    }
     const response = await axios.get('/users/me', config)
     return response.data
 }
@@ -47,6 +52,11 @@ export default function ChatPage() {
 
 
     const sendMessage = async (text: string, authorId: number): Promise<void>=> {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
+            }
+        }
         const payload = {
             text: text,
             author: authorId
@@ -59,6 +69,7 @@ export default function ChatPage() {
     }
 
     const handleLogout = () => {
+        console.log(user)
         localStorage.removeItem('chat-app-token')
         setUser({username: '', id: 0})
         navigate('/')
@@ -73,22 +84,21 @@ export default function ChatPage() {
     }, [])
 
     useEffect(() => {
-        console.log('useeffect', user)
         fetchMessages()
             .then(setMessageList)
             .catch(err => {
                 setMessageList([])
                 setError('Couldn´t fetch messages...')
             })
-    }, [user])
+    }, [])
 
 
     return (
         <div>
             <Heading>Chat</Heading>
-            {messageList.length > 0 && messageList.map(message => {
+            {messageList.length > 0 ? messageList.map(message => {
                 return <Message key={message.id} username={message.username} text={message.text} />
-            })}
+            }): <Text>Loading messages...</Text>}
             <Input value={inputText} onChange={e => setInputText(e.target.value)} />
             <Button onClick={e => sendMessage(inputText, user.id)}>Send</Button>
             <Button onClick={handleLogout}>Log Out</Button>
