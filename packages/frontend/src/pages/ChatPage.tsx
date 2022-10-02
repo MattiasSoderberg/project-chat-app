@@ -5,7 +5,10 @@ import {
     Heading,
     Input,
     Button,
-    Text
+    Text,
+    Box,
+    Flex,
+    Spacer
 } from '@chakra-ui/react'
 import Message from '../components/Message'
 
@@ -46,11 +49,11 @@ export default function ChatPage() {
     const [messageList, setMessageList] = useState<messageItem[]>([])
     const [error, setError] = useState('')
     const [inputText, setInputText] = useState('')
-    const [user, setUser] = useState<userType>({username: '', id: 0})
+    const [user, setUser] = useState<userType>({ username: '', id: 0 })
     const navigate = useNavigate()
 
 
-    const sendMessage = async (text: string, authorId: number): Promise<void>=> {
+    const sendMessage = async (text: string, authorId: number): Promise<void> => {
         const config = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
@@ -68,7 +71,7 @@ export default function ChatPage() {
 
     const handleLogout = () => {
         localStorage.removeItem('chat-app-token')
-        setUser({username: '', id: 0})
+        setUser({ username: '', id: 0 })
         navigate('/')
     }
 
@@ -91,14 +94,16 @@ export default function ChatPage() {
 
 
     return (
-        <div>
+        <Box>
             <Heading>Chat</Heading>
-            {messageList.length > 0 ? messageList.map(message => {
-                return <Message key={message.id} username={message.username} text={message.text} />
-            }): <Text>Loading messages...</Text>}
-            <Input value={inputText} onChange={e => setInputText(e.target.value)} />
-            <Button onClick={e => sendMessage(inputText, user.id)}>Send</Button>
-            <Button onClick={handleLogout}>Log Out</Button>
-        </div>
+            <Flex direction='column'>
+                {messageList.length > 0 ? messageList.map(message => {
+                    return <Message key={message.id} username={message.username} text={message.text} loggedInUser={user.username} />
+                }) : <Text>Loading messages...</Text>}
+            </Flex>
+                <Input value={inputText} onChange={e => setInputText(e.target.value)} />
+                <Button onClick={e => sendMessage(inputText, user.id)}>Send</Button>
+                <Button onClick={handleLogout}>Log Out</Button>
+        </Box>
     )
 }
