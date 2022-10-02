@@ -23,8 +23,10 @@ export default function LoginPage() {
         }
         try {
             const response = await axios.post('/users/login', userCredentials)
-            localStorage.setItem('chat-app-token', response.data.token)
-            navigate('/chat')
+            if (response.data.token) {
+                localStorage.setItem('chat-app-token', response.data.token)
+                navigate('/chat')
+            }
         } catch (err) {
             console.log(err)
         }
