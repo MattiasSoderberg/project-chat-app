@@ -94,9 +94,9 @@ export default function ChatPage() {
 
 
     return (
-        <Box>
+        <Box p={10}>
             <Heading>Chat</Heading>
-            <Flex direction='column'>
+            <Flex direction='column' gap={2}>
                 {messageList.length > 0 ? messageList.map(message => {
                     return <Message key={message.id} username={message.username} text={message.text} loggedInUser={user.username} />
                 }) : <Text>Loading messages...</Text>}
