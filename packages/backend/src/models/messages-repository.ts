@@ -3,7 +3,10 @@ import { sql } from 'slonik'
 
 export const getAllMessages = async () => {
     return (await pool).connect(async (connection) => {
-        return await connection.query(sql`SELECT * FROM messages`)
+        return await connection.query(sql`SELECT m.id, m.text, u.username 
+        FROM messages m
+        LEFT JOIN users u
+        ON author = u.id`)
     })
 }
 
