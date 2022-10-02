@@ -12,7 +12,7 @@ export const saveNewUser = async (userCredentials: UserCredentials) => {
     
 }
 
-export const loginUser = async (userCredetials: UserCredentials) => {
+export const loginUser = async (userCredetials: UserCredentials) => { // TODO fix crash when username and password are empty
     const { username, password } = userCredetials
 
     const user = await getUserByUsername(username)
