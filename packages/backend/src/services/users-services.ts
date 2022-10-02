@@ -1,7 +1,7 @@
 import { UserCredentials } from '@chat-app/shared'
 import { hash, compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
-import { createUser, getUserByUsername } from '../models/users-repository'
+import { createUser, getUserByUsername, getUserByUsernameWithMessages } from '../models/users-repository'
 
 export const saveNewUser = async (userCredentials: UserCredentials) => {
     const { username, password } = userCredentials
@@ -27,6 +27,6 @@ export const loginUser = async (userCredetials: UserCredentials) => {
 }
 
 export const loadLoggedInUser = async (username: string) => {
-    const user = await getUserByUsername(username)
+    const user = await getUserByUsernameWithMessages(username)
     return user.rows[0]
 }
