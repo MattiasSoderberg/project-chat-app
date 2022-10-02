@@ -1,5 +1,5 @@
 import express, { Application, json, Request, Response } from 'express'
-import mongoose from 'mongoose'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import { pool } from './db'
 import { sql } from 'slonik'
@@ -11,6 +11,7 @@ dotenv.config()
 const app: Application = express()
 const port = process.env.PORT || 3001
 
+app.use(cors())
 app.use(json())
 app.use('/users', usersRouter)
 app.use('/messages', messagesRouter)
