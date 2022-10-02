@@ -29,7 +29,6 @@ const fetchMessages = async () => {
         }
     }
     const response = await axios.get('/messages', config)
-    // console.log(response.data.rows[0].text)
     return response.data.rows
 }
 
@@ -61,15 +60,13 @@ export default function ChatPage() {
             text: text,
             author: authorId
         }
-        console.log(payload, config)
+        setInputText('')
         await axios.post('/messages', payload, config)
-        // const messages = await fetchMessages()
         setMessageList(await fetchMessages())
 
     }
 
     const handleLogout = () => {
-        console.log(user)
         localStorage.removeItem('chat-app-token')
         setUser({username: '', id: 0})
         navigate('/')
