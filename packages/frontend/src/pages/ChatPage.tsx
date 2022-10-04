@@ -13,6 +13,16 @@ import {
 import Message from '../components/Message'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
+axios.interceptors.request.use(config => {
+    if (!config?.headers) {
+        config.headers = {}
+    }
+    const token = localStorage.getItem('chat-app-token')
+    if (token) {
+        config.headers['authorization'] = `Bearer ${token}`
+    }
+    return config
+})
 
 type messageItem = {
     id: number,
@@ -26,22 +36,22 @@ type userType = {
 }
 
 const fetchMessages = async () => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
-        }
-    }
-    const response = await axios.get('/messages', config)
+    // const config = {
+    //     headers: {
+    //         Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
+    //     }
+    // }
+    const response = await axios.get('/messages')
     return response.data.rows
 }
 
 const fetchUser = async () => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
-        }
-    }
-    const response = await axios.get('/users/me', config)
+    // const config = {
+    //     headers: {
+    //         Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
+    //     }
+    // }
+    const response = await axios.get('/users/me')
     return response.data
 }
 
@@ -54,17 +64,12 @@ export default function ChatPage() {
 
 
     const sendMessage = async (text: string, authorId: number): Promise<void> => {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
-            }
-        }
         const payload = {
             text: text,
             author: authorId
         }
         setInputText('')
-        await axios.post('/messages', payload, config)
+        await axios.post('/messages', payload)
         setMessageList(await fetchMessages())
 
     }
