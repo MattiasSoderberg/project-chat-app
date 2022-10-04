@@ -36,21 +36,11 @@ type userType = {
 }
 
 const fetchMessages = async () => {
-    // const config = {
-    //     headers: {
-    //         Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
-    //     }
-    // }
     const response = await axios.get('/messages')
     return response.data.rows
 }
 
 const fetchUser = async () => {
-    // const config = {
-    //     headers: {
-    //         Authorization: `Bearer ${localStorage.getItem('chat-app-token')}`
-    //     }
-    // }
     const response = await axios.get('/users/me')
     return response.data
 }
@@ -84,7 +74,7 @@ export default function ChatPage() {
         fetchUser()
             .then(setUser)
             .catch(err => {
-                setError('Coldn´t fetch user')
+                setError("Couldn't fetch user")
             })
     }, [])
 
@@ -93,7 +83,7 @@ export default function ChatPage() {
             .then(setMessageList)
             .catch(err => {
                 setMessageList([])
-                setError('Couldn´t fetch messages...')
+                setError("Couldn't fetch messages...")
             })
     }, [])
 
