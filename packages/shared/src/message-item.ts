@@ -1,4 +1,5 @@
 export interface MessageItem {
     text: string,
-    author: number
+    author: number,
+    username?: string
 }
