@@ -11,7 +11,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
             const token = authHeader.split(' ')[1]
 
             if (token) {
-                req.user = String(verify(token, JWT_SECRET))
+                req.user = verify(token, JWT_SECRET) as JwtPayload
                 next()
             }
         }

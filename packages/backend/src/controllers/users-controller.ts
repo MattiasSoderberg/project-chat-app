@@ -3,6 +3,7 @@ import { createUser, getUsers } from '../models/users-repository'
 import { loadLoggedInUser, loginUser, saveNewUser } from '../services/users-services'
 import { UserCredentials } from '@chat-app/shared'
 import { auth } from '../middlewares/auth'
+import { JwtPayload } from 'jsonwebtoken'
 
 const usersRouter = express.Router()
 
@@ -25,7 +26,7 @@ usersRouter.post("/login", async (req: Request<UserCredentials>, res: Response) 
 })
 
 usersRouter.get("/me", auth, async (req: Request, res: Response) => {
-    res.send(await loadLoggedInUser(String(req.user)))
+    res.send(await loadLoggedInUser(req.user as JwtPayload))
 })
 
 export default usersRouter
