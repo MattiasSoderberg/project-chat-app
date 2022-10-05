@@ -1,10 +1,9 @@
 import express, { Application, json, Request, Response } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import { pool } from './db'
-import { sql } from 'slonik'
 import usersRouter from './controllers/users-controller'
 import messagesRouter from './controllers/messages-controller'
+import { setUpTables } from './models/db'
 
 dotenv.config()
 
@@ -17,5 +16,6 @@ app.use('/users', usersRouter)
 app.use('/messages', messagesRouter)
 
 app.listen(port, () => {
+    setUpTables()
     console.log(`Server is listening on port ${port}`)
 })
