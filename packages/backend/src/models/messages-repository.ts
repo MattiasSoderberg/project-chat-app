@@ -1,12 +1,33 @@
-import { pool } from '../db'
+import { pool } from './db'
 import { sql } from 'slonik'
+
+export const createMessagesTable = async () => {
+    (await pool).connect(async (connection) => {
+        await connection.query(sql`
+        CREATE TABLE IF NOT EXISTS messages (
+            id serial PRIMARY KEY,
+            text VARCHAR NOT NULL,
+            created_at TIMESTAMP NOT NULL,
+            updated_at TIMESTAMP,
+            author VARCHAR,
+            room INT,
+            FOREIGN KEY (author)
+                REFERENCES users (username)
+                ON DELETE CASCADE,
+            FOREIGN KEY (room)
+                REFERENCES rooms (id)
+                ON DELETE CASCADE
+        )
+        `)
+    })
+}
 
 export const getAllMessages = async () => {
     return (await pool).connect(async (connection) => {
-        return await connection.query(sql`SELECT m.id, m.text, u.username 
+        return await connection.any(sql`SELECT m.id, m.text, m.author, u.username
         FROM messages m
         LEFT JOIN users u
-        ON author = u.id`)
+        ON m.author = u.username`)
     })
 }
 
