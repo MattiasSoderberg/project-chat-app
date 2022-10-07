@@ -10,7 +10,12 @@ messagesRouter.get("/", auth, async (req: Request, res: Response) => {
 })
 
 messagesRouter.post("/", auth, async (req: Request, res: Response) => {
-    res.send(await saveMessage(req.body, req.user as JwtPayload))
+    const newMessage = (await saveMessage(req.body, req.user as JwtPayload))
+    if (newMessage) {
+        res.sendStatus(201)
+    } else {
+        res.status(400).json({ message: 'Could not create message' })
+    }
 })
 
 export default messagesRouter
