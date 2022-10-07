@@ -24,7 +24,7 @@ export const createMessagesTable = async () => {
 
 export const getAllMessages = async () => {
     return (await pool).connect(async (connection) => {
-        return await connection.any(sql`SELECT m.id, m.text, m.author, u.username
+        return await connection.any(sql`SELECT m.id, m.text, m.author, m.room
         FROM messages m
         LEFT JOIN users u
         ON m.author = u.username`)
