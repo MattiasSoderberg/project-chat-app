@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { createUser, getUsers } from '../models/users-repository'
+import { getUsers } from '../models/users-repository'
 import { loadLoggedInUser, loginUser, saveNewUser } from '../services/users-services'
 import { UserCredentials } from '@chat-app/shared'
 import { auth } from '../middlewares/auth'
