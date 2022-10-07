@@ -8,6 +8,7 @@ export const loadMessages = async () => {
 }
 
 export const saveMessage = async (text: string, user: JwtPayload) => {
-    await createMessage(text, user.id)
+    const date = new Date().toISOString()
+    await createMessage(text, user.id, date)
     return await loadMessages()
 }
