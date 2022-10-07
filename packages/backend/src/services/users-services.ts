@@ -18,15 +18,15 @@ export const loginUser = async (userCredetials: UserCredentials) => { // TODO fi
 
     const user = await getUserByUsername(username)
     
-    if (user.rows[0]) {
-        const hashedPassword = String(user.rows[0].password)
+    if (user) {
+        const hashedPassword = String(user.password)
         if (await compare(password, hashedPassword)) {
-            return sign({username: user.rows[0].username, id: user.rows[0].id}, String(process.env.JWT_SECRET), { expiresIn: '1800s' })
+            return sign({username: user.username, id: user.id}, String(process.env.JWT_SECRET), { expiresIn: '1800s' })
         }
     }
 }
 
 export const loadLoggedInUser = async (user: JwtPayload) => {
     const logginUser = await getUserByUsernameWithMessages(user.username)
-    return logginUser.rows[0]
+    return logginUser
 }
