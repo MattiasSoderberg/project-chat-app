@@ -10,7 +10,7 @@ messagesRouter.get("/", auth, async (req: Request, res: Response) => {
 })
 
 messagesRouter.post("/", auth, async (req: Request, res: Response) => {
-    res.send(await saveMessage(req.body.text, req.user as JwtPayload))
+    res.send(await saveMessage(req.body, req.user as JwtPayload))
 })
 
 export default messagesRouter

@@ -43,12 +43,11 @@ export const getMessagesByUserId = async (authorId: number) => {
     })
 }
 
-export const createMessage = async (text: string, author: string, date: string) => {
-    // const date = new Date().toISOString
+export const createMessage = async (text: string, author: string, date: string, room: number) => {
     return (await pool).connect(async (connection) => {
         try {
-            return await connection.query(sql`INSERT INTO messages (text, author, created_at)
-            VALUES (${text}, ${author}, ${date})`)
+            return await connection.query(sql`INSERT INTO messages (text, author, created_at, room)
+            VALUES (${text}, ${author}, ${date}, ${room})`)
         } catch (err) {
             console.error(err)
         }
