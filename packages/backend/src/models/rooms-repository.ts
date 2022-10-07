@@ -24,12 +24,12 @@ export const getAllRooms = async () => {
     })
 }
 
-export const createRoom = async (title: string, owner: string) => {
+export const createRoom = async (title: string, owner: string, slug: string) => {
     return (await pool).connect(async connection => {
         try {
             return await connection.query(sql`
-                INSERT INTO rooms (title, owner)
-                VALUES (${title}, ${owner})
+                INSERT INTO rooms (title, owner, slug)
+                VALUES (${title}, ${owner}, ${slug})
             `)
         } catch (err) {
             if (err instanceof UniqueIntegrityConstraintViolationError) {
