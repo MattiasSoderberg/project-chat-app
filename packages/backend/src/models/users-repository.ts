@@ -38,13 +38,19 @@ export const createUser = async (username: string, password: string, date: strin
 
 export const getUserByUsername = async (username: string) => {
     return (await pool).connect(async connection => {
+        return await connection.one(sql`SELECT id, username, created_at FROM users WHERE username = ${username}`)
+    })
+}
+
+export const getUserByUsernameWithPassword = async (username: string) => {
+    return (await pool).connect(async connection => {
         return await connection.one(sql`SELECT * FROM users WHERE username = ${username}`)
     })
 }
 
 export const getUserByUsernameWithMessages = async (username: string) => {  // TODO fix messages returned from db
     return (await pool).connect(async connection => {
-        return await connection.one(sql`SELECT users.id, users.username, users.created_at, messages.text 
+        return await connection.one(sql`SELECT users.id, users.username, users.created_at, messages.text
         FROM users
         LEFT JOIN messages
         ON users.username = messages.author
