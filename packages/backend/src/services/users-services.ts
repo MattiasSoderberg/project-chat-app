@@ -1,7 +1,7 @@
 import { UserCredentials } from '@chat-app/shared'
 import { hash, compare } from 'bcryptjs'
 import { JwtPayload, sign } from 'jsonwebtoken'
-import { createUser, getUserByUsername, getUserByUsernameWithMessages } from '../models/users-repository'
+import { createUser, getUserByUsername, getUserByUsernameWithMessages, getUserByUsernameWithPassword } from '../models/users-repository'
 
 export const saveNewUser = async (userCredentials: UserCredentials) => {
     const { username, password } = userCredentials
@@ -16,7 +16,7 @@ export const saveNewUser = async (userCredentials: UserCredentials) => {
 export const loginUser = async (userCredetials: UserCredentials) => { // TODO fix crash when username and password are empty
     const { username, password } = userCredetials
 
-    const user = await getUserByUsername(username)
+    const user = await getUserByUsernameWithPassword(username)
     
     if (user) {
         const hashedPassword = String(user.password)
@@ -27,6 +27,6 @@ export const loginUser = async (userCredetials: UserCredentials) => { // TODO fi
 }
 
 export const loadLoggedInUser = async (user: JwtPayload) => {
-    const logginUser = await getUserByUsernameWithMessages(user.username)
+    const logginUser = await getUserByUsername(user.username)
     return logginUser
 }
