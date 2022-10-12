@@ -24,6 +24,16 @@ export const getAllRooms = async () => {
     })
 }
 
+export const getRoomById = async (id: number) =>{
+    return (await pool).connect(async connection => {
+        return await connection.any(sql`
+            SELECT * FROM rooms
+            LEFT JOIN messages m ON m.room = ${id}
+            WHERE rooms.id = ${id}
+        `)
+    })
+}
+
 export const createRoom = async (title: string, owner: string, slug: string) => {
     return (await pool).connect(async connection => {
         try {
