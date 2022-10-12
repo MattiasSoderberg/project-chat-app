@@ -31,15 +31,9 @@ export const getAllMessages = async () => {
     })
 }
 
-export const getAllMessagesNotByUser = async (authorId: number) => {
-    return (await pool).connect(async (connection) => {
-        return await connection.query(sql`SELECT * FROM messages WHERE id != authorId`)
-    })
-}
-
-export const getMessagesByUserId = async (authorId: number) => {
-    return (await pool).connect(async (connection) => {
-        return await connection.query(sql`SELECT * FROM messages WHERE author=${authorId}`)
+export const getMessageByRoom = async (room: number) => {
+    return (await pool).connect(async connection => {
+        return await connection.any(sql`SELECT * FROM messages WHERE room = ${room}`)
     })
 }
 
