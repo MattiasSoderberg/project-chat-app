@@ -7,6 +7,9 @@ export const loadAllRooms = async () => {
 }
 
 export const saveNewRoom = async (body: {title: string}, user: JwtPayload) => {
+    if (body.title == '') {
+        return
+    }
     return await createRoom(body.title, user.username, createSlug(body.title))
 }
 
