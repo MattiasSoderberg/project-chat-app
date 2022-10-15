@@ -15,11 +15,10 @@ roomsRouter.get("/", auth, async (_req: Request, res: Response) => {
 
 roomsRouter.post("/", auth, async (req: Request, res: Response) => {
   const newRoom = await saveNewRoom(req.body, req.user as JwtPayload);
-  console.log(newRoom)
   if (newRoom) {
     res.sendStatus(201);
   } else {
-    res.status(400).send('Room title already exists');
+    res.status(400).send('Could not create room');
   }
 });
 
