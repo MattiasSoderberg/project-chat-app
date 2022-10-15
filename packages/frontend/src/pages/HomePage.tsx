@@ -72,8 +72,8 @@ export default function HomePage() {
           </Link>
         );
       })}
-      
-      {showModal && <RoomModal username={user.username} />}
+
+      {showModal && <RoomModal username={user.username} setShowModal={setShowModal} setRooms={setRooms} fetchRooms={fetchRooms} />}
       
       <Button onClick={e => setShowModal(true)}>Create Room</Button>
     </div>
