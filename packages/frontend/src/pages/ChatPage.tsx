@@ -25,8 +25,8 @@ axios.interceptors.request.use(config => {
     return config
 })
 
-const fetchMessages = async (): Promise<MessageItem[]> => {
-    const response = await axios.get('/messages')
+const fetchMessages = async (roomId: number): Promise<MessageItem[]> => {
+    const response = await axios.get(`/messages/${roomId}`)
     return response.data
 }
 
@@ -45,7 +45,7 @@ export default function ChatPage() {
         }
         setInputText('')
         await axios.post('/messages', payload)
-        setMessageList(await fetchMessages())
+        setMessageList(await fetchMessages(location.state.room.id))
 
     }
 
@@ -55,14 +55,13 @@ export default function ChatPage() {
     }
 
     useEffect(() => {
-        fetchMessages()
+        fetchMessages(location.state.room.id)
             .then(setMessageList)
             .catch(err => {
                 setMessageList([])
                 setError("Couldn't fetch messages...")
             })
-    }, [])
-
+    }, [location.state.room])
 
     return (
         <Box p={10}>
