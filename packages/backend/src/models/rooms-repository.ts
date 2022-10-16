@@ -9,9 +9,9 @@ export const createRoomsTable = async () => {
             id serial PRIMARY KEY,
             title VARCHAR NOT NULL UNIQUE,
             slug VARCHAR NOT NULL UNIQUE,
-            owner VARCHAR NOT NULL,
-            FOREIGN KEY (owner)
-                REFERENCES users (username)
+            server INT NOT NULL,
+            FOREIGN KEY (server)
+                REFERENCES servers (id)
                 ON DELETE CASCADE
         )
         `)
