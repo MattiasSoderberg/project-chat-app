@@ -1,9 +1,10 @@
-import express, { Application, json, Request, Response } from 'express'
+import express, { Application, json } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import usersRouter from './controllers/users-controller'
 import messagesRouter from './controllers/messages-controller'
 import roomsRouter from './controllers/rooms-controller'
+import serversRouter from './controllers/servers-controller'
 import { setUpTables } from './models/db'
 
 dotenv.config()
@@ -14,6 +15,7 @@ const port = process.env.PORT || 3001
 app.use(cors())
 app.use(json())
 app.use('/users', usersRouter)
+app.use('/servers', serversRouter)
 app.use('/messages', messagesRouter)
 app.use('/rooms', roomsRouter)
 
