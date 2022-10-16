@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { JwtPayload } from 'jsonwebtoken'
 import { auth } from '../middlewares/auth'
+import { loadRoomsByServerId } from '../services/rooms-services'
 import { loadAllServers, saveNewServer } from '../services/servers-services'
 
 
@@ -18,6 +19,10 @@ serversRouter.post('/', auth, async (req: Request, res: Response) => {
     } else {
         res.status(400).send('Could not create server')
     }
+})
+
+serversRouter.get('/rooms/:serverId', auth, async (req: Request, res: Response) => {
+    res.send(await loadRoomsByServerId(parseInt(req.params.serverId)))
 })
 
 export default serversRouter
