@@ -46,6 +46,7 @@ export const createServer = async (title: string, user: JwtPayload, slug: string
                 RETURNING *
             `)
             await connection.query(sql`INSERT INTO servers_users (server_id, user_id) VALUES (${server.id}, ${user.id})`)
+            return server
         } catch (err) {
             if (err instanceof UniqueIntegrityConstraintViolationError) {
                 console.error(err.message)

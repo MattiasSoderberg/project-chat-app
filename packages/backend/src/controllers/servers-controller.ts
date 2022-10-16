@@ -11,7 +11,13 @@ serversRouter.get('/', auth, async (req: Request, res: Response) => {
 })
 
 serversRouter.post('/', auth, async (req: Request, res: Response) => {
-    res.send(await saveNewServer(req.body, req.user as JwtPayload))
+    const newServer = await saveNewServer(req.body, req.user as JwtPayload)
+
+    if (newServer) {
+        res.sendStatus(201)
+    } else {
+        res.status(400).send('Could not create server')
+    }
 })
 
 export default serversRouter
