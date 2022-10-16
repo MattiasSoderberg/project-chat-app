@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { RoomItem } from "@chat-app/shared";
-import { Heading, Text, Link, Button } from "@chakra-ui/react";
+import { RoomItem, ServerItem } from "@chat-app/shared";
+import { Heading, Text, Link, Button, HStack, Flex } from "@chakra-ui/react";
 import RoomModal from "../components/RoomModal";
+import ServersList from "../components/ServersList";
+import RoomsList from "../components/RoomsList";
+import Chat from "../components/Chat";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.request.use((config) => {
@@ -17,7 +20,7 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-type userType = {
+export type userType = {
   username: string;
   id: number;
 };
@@ -25,16 +28,24 @@ type userType = {
 const fetchUser = async () => {
   try {
     const response = await axios.get("/users/me");
-    // console.log("Response", response);
     return response.data;
   } catch (err) {
     return err;
   }
 };
 
-const fetchRooms = async () => {
+const fetchServers = async () => {
   try {
-    const response = await axios.get("/rooms");
+    const response = await axios.get("/servers");
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+const fetchRoomsOnServer = async (serverId: number) => {
+  try {
+    const response = await axios.get(`servers/rooms/${serverId}`);
     return response.data;
   } catch (err) {
     return err;
@@ -44,7 +55,9 @@ const fetchRooms = async () => {
 export default function HomePage() {
   const [user, setUser] = useState<userType>({ username: "", id: 0 });
   const [rooms, setRooms] = useState<RoomItem[]>([]);
-  const [showModal, setShowModal] = useState(false)
+  const [servers, setServers] = useState<ServerItem[]>([]);
+  const [currentRoom, setCurrentRoom] = useState<RoomItem>({ title: "" });
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,24 +71,28 @@ export default function HomePage() {
   }, [navigate]);
 
   useEffect(() => {
-    fetchRooms().then(setRooms);
+    fetchServers().then(setServers);
   }, []);
 
-  return (
-    <div>
-      <Heading as="h2">Hi {user.username}!</Heading>
-      <Text>Enter a room and start chating!</Text>
-      {rooms.map((room) => {
-        return (
-          <Link as={ReactLink} to={`/chat/${room.slug}`} state={{user, room}} key={room.id}>
-            {room.title}
-          </Link>
-        );
-      })}
+  const handleOnClickServer = async (serverId: number) => {
+    const fetchedRooms = await fetchRoomsOnServer(serverId);
+    setRooms(fetchedRooms);
+    setCurrentRoom({ title: "" });
+  };
 
-      {showModal && <RoomModal username={user.username} setShowModal={setShowModal} setRooms={setRooms} fetchRooms={fetchRooms} />}
-      
-      <Button onClick={e => setShowModal(true)}>Create Room</Button>
-    </div>
+  return (
+    <Flex gap={5}>
+        <ServersList servers={servers} onClick={handleOnClickServer} />
+        <RoomsList rooms={rooms} setCurrentRoom={setCurrentRoom} />
+        {currentRoom.title ? (
+          <Chat room={currentRoom} user={user} />
+        ) : (
+          <Text>Enter a room to chat!</Text>
+        )}
+
+      {/* {showModal && <RoomModal username={user.username} setShowModal={setShowModal} setRooms={setRooms} fetchRooms={fetchRooms} />} */}
+
+      {/* <Button onClick={e => setShowModal(true)}>Create Room</Button> */}
+    </Flex>
   );
 }
