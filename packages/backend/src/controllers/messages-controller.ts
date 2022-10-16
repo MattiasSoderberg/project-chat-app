@@ -14,11 +14,15 @@ messagesRouter.get("/", auth, async (req: Request, res: Response) => {
 });
 
 messagesRouter.post("/", auth, async (req: Request, res: Response) => {
-  const newMessage = await saveMessage(req.body, req.user as JwtPayload);
-  if (newMessage) {
-    res.sendStatus(201);
+  if (req.body.text === "") {
+    res.status(400).send("Message text can not be empty");
   } else {
-    res.status(400).json({ message: "Could not create message" });
+    const newMessage = await saveMessage(req.body, req.user as JwtPayload);
+    if (newMessage) {
+      res.sendStatus(201);
+    } else {
+      res.status(400).json({ message: "Could not create message" });
+    }
   }
 });
 
