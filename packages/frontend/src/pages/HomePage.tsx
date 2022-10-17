@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { RoomItem, ServerItem } from "@chat-app/shared";
-import { Heading, Text, Link, Button, HStack, Flex } from "@chakra-ui/react";
+import { Heading, Text, Link, Button, HStack, Flex, Box } from "@chakra-ui/react";
 import RoomModal from "../components/RoomModal";
 import ServersList from "../components/ServersList";
 import RoomsList from "../components/RoomsList";
 import Chat from "../components/Chat";
+import Navbar from "../components/Navbar";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.request.use((config) => {
@@ -57,6 +58,7 @@ export default function HomePage() {
   const [rooms, setRooms] = useState<RoomItem[]>([]);
   const [servers, setServers] = useState<ServerItem[]>([]);
   const [currentRoom, setCurrentRoom] = useState<RoomItem>({ title: "" });
+  const [currentServer, setCurrentServer] = useState<string>('')
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
@@ -74,25 +76,25 @@ export default function HomePage() {
     fetchServers().then(setServers);
   }, []);
 
-  const handleOnClickServer = async (serverId: number) => {
+  const handleOnClickServer = async (serverId: number, serverTitle: string) => {
     const fetchedRooms = await fetchRoomsOnServer(serverId);
     setRooms(fetchedRooms);
+    setCurrentServer(serverTitle)
     setCurrentRoom({ title: "" });
   };
 
   return (
-    <Flex gap={5}>
+    <Box>
+      <Navbar username={user.username} />
+      <Flex>
         <ServersList servers={servers} onClick={handleOnClickServer} />
-        <RoomsList rooms={rooms} setCurrentRoom={setCurrentRoom} />
-        {currentRoom.title ? (
-          <Chat room={currentRoom} user={user} />
-        ) : (
-          <Text>Enter a room to chat!</Text>
-        )}
+        <RoomsList rooms={rooms} currentServer={currentServer} setCurrentRoom={setCurrentRoom} />
+        <Chat room={currentRoom} user={user} />
 
-      {/* {showModal && <RoomModal username={user.username} setShowModal={setShowModal} setRooms={setRooms} fetchRooms={fetchRooms} />} */}
+        {/* {showModal && <RoomModal username={user.username} setShowModal={setShowModal} setRooms={setRooms} fetchRooms={fetchRooms} />} */}
 
-      {/* <Button onClick={e => setShowModal(true)}>Create Room</Button> */}
-    </Flex>
+        {/* <Button onClick={e => setShowModal(true)}>Create Room</Button> */}
+      </Flex>
+    </Box>
   );
 }

@@ -15,13 +15,13 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-export default function RoomsList(props: {rooms: RoomItem[]}) {
+export default function RoomsList(props: {rooms: RoomItem[], currentServer: string, setCurrentRoom: React.Dispatch<React.SetStateAction<RoomItem>> }) {
   return (
-    <VStack>
-      <Heading>RoomsList</Heading>
+    <VStack height="95vh" width="15vw" bg="gray.200" p={2}>
+      <Heading as="h2" size="lg">{props.currentServer}</Heading>
       {props.rooms.length > 0 ? props.rooms.map(room => {
-        return <Button>{room.title}</Button>
-      }): <Text>No Availabe Rooms</Text>}
+        return <Button key={room.id} onClick={e => props.setCurrentRoom(room)}>{room.title}</Button>
+      }): <Text>{props.currentServer ? 'No Availabe Rooms' : 'Select a server'}</Text>}
     </VStack>
   );
 }
