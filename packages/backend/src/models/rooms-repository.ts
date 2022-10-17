@@ -9,7 +9,7 @@ export const createRoomsTable = async () => {
             id serial PRIMARY KEY,
             title VARCHAR NOT NULL UNIQUE,
             slug VARCHAR NOT NULL UNIQUE,
-            server INT NOT NULL,
+            server INT,
             FOREIGN KEY (server)
                 REFERENCES servers (id)
                 ON DELETE CASCADE
@@ -34,19 +34,15 @@ export const getRoomById = async (id: number) =>{
     return (await pool).connect(async connection => {
         return await connection.any(sql`
             SELECT * FROM rooms
-            LEFT JOIN messages m ON m.room = ${id}
-            WHERE rooms.id = ${id}
+            WHERE server = ${id}
         `)
     })
 }
 
-export const createRoom = async (title: string, serverId: number, owner: string, slug: string) => {
+export const createRoom = async (title: string, serverId: number, slug: string) => {
     return (await pool).connect(async connection => {
         try {
-            return await connection.query(sql`
-                INSERT INTO rooms (title, server, slug)
-                VALUES (${title}, ${serverId}, ${slug})
-            `)
+            return await connection.one(sql`INSERT INTO rooms (title, server, slug) VALUES (${title}, ${serverId}, ${slug}) RETURNING *`)
         } catch (err) {
             if (err instanceof UniqueIntegrityConstraintViolationError) {
                 console.error(err.message)

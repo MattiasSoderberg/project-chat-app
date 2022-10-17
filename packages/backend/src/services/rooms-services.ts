@@ -6,11 +6,11 @@ export const loadAllRooms = async () => {
     return await getAllRooms()
 }
 
-export const saveNewRoom = async (body: {title: string, serverId: number}, user: JwtPayload) => {
+export const saveNewRoom = async (body: {title: string, serverId: number}) => {
     if (body.title == '') {
         return
     }
-    return await createRoom(body.title, body.serverId, user.username, createSlug(body.title))
+    return await createRoom(body.title, body.serverId, createSlug(body.title))
 }
 
 export const loadRoomById = async (id: number) => {

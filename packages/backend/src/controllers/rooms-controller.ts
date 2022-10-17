@@ -14,7 +14,7 @@ roomsRouter.get("/", auth, async (_req: Request, res: Response) => {
 });
 
 roomsRouter.post("/", auth, async (req: Request, res: Response) => {
-  const newRoom = await saveNewRoom(req.body, req.user as JwtPayload);
+  const newRoom = await saveNewRoom(req.body);
   if (newRoom) {
     res.sendStatus(201);
   } else {
