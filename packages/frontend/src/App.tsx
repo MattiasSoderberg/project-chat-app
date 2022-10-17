@@ -10,8 +10,6 @@ function App() {
 
   return (
       <Box>
-        <Heading as='h1' size='2xl'>Chat-App</Heading>
-
         <Routes>
           <Route path='/' element={<LoginPage />} />
           <Route path='/signup' element={<SignupPage />} />
