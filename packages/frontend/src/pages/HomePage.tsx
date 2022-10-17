@@ -2,12 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { RoomItem, ServerItem } from "@chat-app/shared";
-import { Heading, Text, Link, Button, HStack, Flex, Box } from "@chakra-ui/react";
+import {
+  Heading,
+  Text,
+  Link,
+  Button,
+  HStack,
+  Flex,
+  Box,
+} from "@chakra-ui/react";
 import RoomModal from "../components/RoomModal";
 import ServersList from "../components/ServersList";
 import RoomsList from "../components/RoomsList";
 import Chat from "../components/Chat";
 import Navbar from "../components/Navbar";
+import ServerModal from "../components/ServerModal";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.request.use((config) => {
@@ -56,10 +65,11 @@ const fetchRoomsOnServer = async (serverId: number) => {
 export default function HomePage() {
   const [user, setUser] = useState<userType>({ username: "", id: 0 });
   const [rooms, setRooms] = useState<RoomItem[]>([]);
-  const [servers, setServers] = useState<ServerItem[]>([]);
   const [currentRoom, setCurrentRoom] = useState<RoomItem>({ title: "" });
-  const [currentServer, setCurrentServer] = useState<string>('')
-  const [showModal, setShowModal] = useState(false);
+  const [showRoomModal, setShowRoomModal] = useState(false);
+  const [servers, setServers] = useState<ServerItem[]>([]);
+  const [currentServer, setCurrentServer] = useState<ServerItem>({ title: "" });
+  const [showServerModal, setShowServerModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,24 +86,46 @@ export default function HomePage() {
     fetchServers().then(setServers);
   }, []);
 
-  const handleOnClickServer = async (serverId: number, serverTitle: string) => {
-    const fetchedRooms = await fetchRoomsOnServer(serverId);
+  const handleOnClickServer = async (server: ServerItem) => {
+    const fetchedRooms = await fetchRoomsOnServer(server.id as number);
     setRooms(fetchedRooms);
-    setCurrentServer(serverTitle)
+    setCurrentServer(server);
     setCurrentRoom({ title: "" });
   };
 
   return (
     <Box>
+      {showRoomModal && (
+        <RoomModal
+          server={currentServer}
+          setShowRoomModal={setShowRoomModal}
+          setRooms={setRooms}
+          fetchRoomsOnServer={fetchRoomsOnServer}
+        />
+      )}
+      {showServerModal && (
+        <ServerModal
+          username={user.username}
+          setShowServerModal={setShowServerModal}
+          setServers={setServers}
+          fetchServers={fetchServers}
+        />
+      )}
       <Navbar username={user.username} />
       <Flex>
-        <ServersList servers={servers} onClick={handleOnClickServer} />
-        <RoomsList rooms={rooms} currentServer={currentServer} setCurrentRoom={setCurrentRoom} />
+        <ServersList
+          servers={servers}
+          onClick={handleOnClickServer}
+          setShowServerModal={setShowServerModal}
+        />
+        <RoomsList
+          rooms={rooms}
+          currentServer={currentServer}
+          setCurrentRoom={setCurrentRoom}
+          setShowRoomModal={setShowRoomModal}
+        />
         <Chat room={currentRoom} user={user} />
 
-        {/* {showModal && <RoomModal username={user.username} setShowModal={setShowModal} setRooms={setRooms} fetchRooms={fetchRooms} />} */}
-
-        {/* <Button onClick={e => setShowModal(true)}>Create Room</Button> */}
       </Flex>
     </Box>
   );

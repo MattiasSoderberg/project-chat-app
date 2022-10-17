@@ -8,6 +8,8 @@ import {
   Flex,
   Text,
   HStack,
+  Center,
+  Spacer,
 } from "@chakra-ui/react";
 import { MessageItem, RoomItem } from "@chat-app/shared";
 import MessageList from "../components/MessageList";
@@ -69,33 +71,36 @@ export default function Chat(props: { room: RoomItem; user: userType }) {
 
   return (
     <>
-      {props.room.title ? (
-        <Box bg="gray.700" width="75vw" p={2} color="white">
-          <Heading mb={2}>{props.room.title}</Heading>
-          <Flex direction="column" gap={2}>
-            <MessageList messages={messageList} user={props.user} />
+      <Box bg="gray.700" height="95vh" width="75vw" p={2} color="white">
+        {props.room.title ? (
+          <Flex direction="column" height="100%">
+            <Heading mb={2}>{props.room.title}</Heading>
+            <Flex direction="column" gap={2}>
+              <MessageList messages={messageList} user={props.user} />
+            </Flex>
+            <Spacer />
+            <HStack>
+              <Input
+                bg="gray.400"
+                color="black"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+              />
+              <Button
+                colorScheme="blue"
+                onClick={(e) =>
+                  sendMessage(inputText, props.user.id, props.room.id as number)
+                }
+                isDisabled={!inputText}
+              >
+                Send
+              </Button>
+            </HStack>
           </Flex>
-          <HStack>
-            <Input
-            bg="gray.400"
-            color="black"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-            />
-            <Button
-              colorScheme="blue"
-              onClick={(e) =>
-                sendMessage(inputText, props.user.id, props.room.id as number)
-              }
-              isDisabled={!inputText}
-            >
-              Send
-            </Button>
-          </HStack>
-        </Box>
-      ) : (
-        <Text>Enter a room to chat!</Text>
-      )}
+        ) : (
+          <Text>Enter a room to chat!</Text>
+        )}
+      </Box>
     </>
   );
 }

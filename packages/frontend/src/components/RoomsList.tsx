@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
-import { Button, Heading, Text, VStack } from "@chakra-ui/react";
-import { RoomItem } from "@chat-app/shared";
+import { Box, Button, Heading, Spacer, Text, VStack } from "@chakra-ui/react";
+import { RoomItem, ServerItem } from "@chat-app/shared";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.request.use((config) => {
@@ -15,13 +15,41 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-export default function RoomsList(props: {rooms: RoomItem[], currentServer: string, setCurrentRoom: React.Dispatch<React.SetStateAction<RoomItem>> }) {
+export default function RoomsList(props: {
+  rooms: RoomItem[];
+  currentServer: ServerItem;
+  setCurrentRoom: React.Dispatch<React.SetStateAction<RoomItem>>;
+  setShowRoomModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   return (
-    <VStack height="95vh" width="15vw" bg="gray.200" p={2}>
-      <Heading as="h2" size="lg">{props.currentServer}</Heading>
-      {props.rooms.length > 0 ? props.rooms.map(room => {
-        return <Button key={room.id} onClick={e => props.setCurrentRoom(room)}>{room.title}</Button>
-      }): <Text>{props.currentServer ? 'No Availabe Rooms' : 'Select a server'}</Text>}
-    </VStack>
+    <Box height="95vh" width="15vw" bg="gray.200" p={2}>
+      {props.currentServer.title ? (
+        <VStack height="100%">
+          <Heading as="h2" size="lg">
+            {props.currentServer.title}
+          </Heading>
+          {props.rooms.length > 0 ? (
+            props.rooms.map((room) => {
+              return (
+                <Button
+                  key={room.id}
+                  onClick={(e) => props.setCurrentRoom(room)}
+                >
+                  {room.title}
+                </Button>
+              );
+            })
+          ) : (
+            <Text>No Availabe Rooms</Text>
+          )}
+          <Spacer />
+          <Button onClick={(e) => props.setShowRoomModal(true)}>
+            Create Room
+          </Button>
+        </VStack>
+      ) : (
+        <Text>Select a Server</Text>
+      )}
+    </Box>
   );
 }
