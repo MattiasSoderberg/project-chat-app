@@ -33,7 +33,7 @@ export const getAllMessages = async () => {
 
 export const getMessageByRoom = async (room: number) => {
     return (await pool).connect(async connection => {
-        return await connection.any(sql`SELECT * FROM messages WHERE room = ${room}`)
+        return await connection.any(sql`SELECT *, created_at AS timestamp, TO_CHAR(created_at, 'YY-MM-DD HH12:MI') created_at FROM messages WHERE room = ${room}`)
     })
 }
 
