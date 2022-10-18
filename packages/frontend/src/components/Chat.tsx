@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import axios, { AxiosError } from "axios";
 import {
   Heading,
@@ -8,12 +8,12 @@ import {
   Flex,
   Text,
   HStack,
-  Center,
   Spacer,
 } from "@chakra-ui/react";
 import { MessageItem, RoomItem } from "@chat-app/shared";
 import MessageList from "../components/MessageList";
 import { userType } from "../pages/HomePage";
+import { Socket } from "socket.io-client";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.request.use((config) => {
@@ -27,18 +27,28 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-const fetchMessages = async (roomId: number): Promise<MessageItem[]> => {
-  if (roomId) {
-    const response = await axios.get(`/messages/${roomId}`);
-    return response.data;
+type MessageAction = {
+  type: "add" | "replace";
+  message?: MessageItem;
+  messages?: MessageItem[];
+};
+
+const messageReducer = (state: MessageItem[], action: MessageAction) => {
+  if (action.type === "add" && action.message) {
+    return [...state, action.message];
+  } else if (action.type === "replace" && action.messages) {
+    return action.messages;
   } else {
-    return [];
+    return state;
   }
 };
 
-export default function Chat(props: { room: RoomItem; user: userType }) {
-  const [messageList, setMessageList] = useState<MessageItem[]>([]);
-  const [error, setError] = useState("");
+export default function Chat(props: {
+  room: RoomItem;
+  user: userType;
+  socket: Socket;
+}) {
+  const [messageList, dispatch] = useReducer(messageReducer, []);
   const [inputText, setInputText] = useState("");
 
   const sendMessage = async (
@@ -53,21 +63,27 @@ export default function Chat(props: { room: RoomItem; user: userType }) {
     };
     setInputText("");
     try {
-      await axios.post("/messages", payload);
-      setMessageList(await fetchMessages(props.room.id as number));
+      const response = await axios.post("/messages", payload);
+
+      props.socket.emit("message", props.room.id, response.data);
     } catch (err) {
-      setError((err as AxiosError).response?.data as string);
+      console.log((err as AxiosError).response?.data as string);
     }
   };
 
   useEffect(() => {
-    fetchMessages(props.room.id as number)
-      .then(setMessageList)
-      .catch((err) => {
-        setMessageList([]);
-        setError("Couldn't fetch messages...");
-      });
-  }, [props.room.id]);
+    props.socket.on("messages", (messages) => {
+      dispatch({ type: "replace", messages });
+    });
+    props.socket.on("message", (message) => {
+      dispatch({ type: "add", message });
+    });
+
+    return () => {
+      props.socket.off("messages");
+      props.socket.off("message");
+    };
+  }, [props.socket]);
 
   return (
     <>
@@ -75,7 +91,21 @@ export default function Chat(props: { room: RoomItem; user: userType }) {
         {props.room.title ? (
           <Flex direction="column" height="100%">
             <Heading mb={2}>{props.room.title}</Heading>
-            <Flex direction="column" gap={2}>
+            <Flex
+              direction="column"
+              gap={2}
+              overflowY="scroll"
+              sx={{
+                "&::-webkit-scrollbar": {
+                  width: "10px",
+                  borderRadius: "8px",
+                  backgroundColor: `gray.500`,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: `gray.500`,
+                },
+              }}
+            >
               <MessageList messages={messageList} user={props.user} />
             </Flex>
             <Spacer />
