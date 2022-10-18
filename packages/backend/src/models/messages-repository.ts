@@ -31,9 +31,15 @@ export const getAllMessages = async () => {
     })
 }
 
-export const getMessageByRoom = async (room: number) => {
+export const getMessagesByRoom = async (room: number) => {
     return (await pool).connect(async connection => {
         return await connection.any(sql`SELECT *, created_at AS timestamp, TO_CHAR(created_at, 'YY-MM-DD HH12:MI') created_at FROM messages WHERE room = ${room}`)
+    })
+}
+
+export const getMessageById = async (id: number) => {
+    return (await pool).connect(async connection => {
+        return await connection.one(sql`SELECT *, created_at AS timestamp, TO_CHAR(created_at, 'YY-MM-DD HH12:MI') created_at FROM messages WHERE id = ${id}`)
     })
 }
 
