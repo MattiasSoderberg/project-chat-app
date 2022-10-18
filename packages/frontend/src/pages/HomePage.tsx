@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link as ReactLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { io, Socket } from 'socket.io-client'
 import { RoomItem, ServerItem } from "@chat-app/shared";
 import {
-  Heading,
-  Text,
-  Link,
-  Button,
-  HStack,
   Flex,
   Box,
 } from "@chakra-ui/react";
@@ -34,6 +30,8 @@ export type userType = {
   username: string;
   id: number;
 };
+
+let socket: Socket = io()
 
 const fetchUser = async () => {
   try {
@@ -73,6 +71,15 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("chat-app-token") as string
+    socket = io('http://localhost:4000', { withCredentials: true, auth: { token: token } })
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
     fetchUser().then((res) => {
       if (res.username) {
         setUser(res);
@@ -92,6 +99,11 @@ export default function HomePage() {
     setCurrentServer(server);
     setCurrentRoom({ title: "" });
   };
+
+  const handleSetCurrentRoom = (room: RoomItem) => {
+    setCurrentRoom(room)
+    socket.emit("join-room", room.id)
+  }
 
   return (
     <Box>
@@ -121,10 +133,11 @@ export default function HomePage() {
         <RoomsList
           rooms={rooms}
           currentServer={currentServer}
-          setCurrentRoom={setCurrentRoom}
+          setCurrentRoom={handleSetCurrentRoom}
           setShowRoomModal={setShowRoomModal}
+          socket={socket}
         />
-        <Chat room={currentRoom} user={user} />
+        <Chat room={currentRoom} user={user} socket={socket} />
 
       </Flex>
     </Box>
