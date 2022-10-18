@@ -1,6 +1,5 @@
 import React from "react";
-import { Link as ReactLink, generatePath } from "react-router-dom";
-import { Heading, VStack, Link, Button, Spacer, Box } from "@chakra-ui/react";
+import { Heading, VStack, Button, Spacer, Box } from "@chakra-ui/react";
 import { ServerItem } from "@chat-app/shared";
 
 export default function ServersList(props: {
