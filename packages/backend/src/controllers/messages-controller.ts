@@ -19,7 +19,7 @@ messagesRouter.post("/", auth, async (req: Request, res: Response) => {
   } else {
     const newMessage = await saveMessage(req.body, req.user as JwtPayload);
     if (newMessage) {
-      res.sendStatus(201);
+      res.status(201).send(newMessage);
     } else {
       res.status(400).json({ message: "Could not create message" });
     }

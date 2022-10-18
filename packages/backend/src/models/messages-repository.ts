@@ -46,8 +46,8 @@ export const getMessageById = async (id: number) => {
 export const createMessage = async (text: string, author: string, date: string, room: number) => {
     return (await pool).connect(async (connection) => {
         try {
-            return await connection.query(sql`INSERT INTO messages (text, author, created_at, room)
-            VALUES (${text}, ${author}, ${date}, ${room})`)
+            return await connection.one(sql`INSERT INTO messages (text, author, created_at, room)
+            VALUES (${text}, ${author}, ${date}, ${room}) RETURNING *`)
         } catch (err) {
             console.error(err)
         }
