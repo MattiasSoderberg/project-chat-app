@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Socket } from "socket.io-client";
 import { Box, Button, Heading, Spacer, Text, VStack } from "@chakra-ui/react";
 import { RoomItem, ServerItem } from "@chat-app/shared";
 
@@ -18,8 +19,9 @@ axios.interceptors.request.use((config) => {
 export default function RoomsList(props: {
   rooms: RoomItem[];
   currentServer: ServerItem;
-  setCurrentRoom: React.Dispatch<React.SetStateAction<RoomItem>>;
+  setCurrentRoom: (room: RoomItem) => void;
   setShowRoomModal: React.Dispatch<React.SetStateAction<boolean>>;
+  socket: Socket;
 }) {
   return (
     <Box height="95vh" width="15vw" bg="gray.200" p={2}>
