@@ -46,7 +46,7 @@ export const onConnect = () => {
           socket.leave(currentRoom);
         }
         socket.join(roomId);
-        console.log(`${socket.data.user.username} joined room ${roomId}`);
+        console.log(`[socket] ${socket.data.user.username} joined room ${roomId}`);
         const messages = await loadMessagesByRoom(roomId);
         socket.emit("messages", messages);
       }
@@ -63,7 +63,7 @@ export const onConnect = () => {
       if (socket.rooms.size > 1) {
         socket.rooms.clear();
       }
-      console.log(socket.data.user.username, "disconnected");
+      console.log("[socket]", socket.data.user.username, "disconnected");
     });
   });
 };
