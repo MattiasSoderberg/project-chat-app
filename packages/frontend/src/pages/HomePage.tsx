@@ -72,7 +72,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const token = localStorage.getItem("chat-app-token") as string
-    socket = io('http://localhost:4000', { withCredentials: true, auth: { token: token } })
+    socket = io(process.env.REACT_APP_API_URL as string, { withCredentials: true, auth: { token: token } })
 
     return () => {
       socket.disconnect()
