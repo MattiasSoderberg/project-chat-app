@@ -2,8 +2,8 @@ import { pool } from './db'
 import { sql } from 'slonik'
 
 export const createMessagesTable = async () => {
-    (await pool).connect(async (connection) => {
-        await connection.query(sql`
+    return (await pool).connect(async (connection) => {
+        return await connection.query(sql`
         CREATE TABLE IF NOT EXISTS messages (
             id serial PRIMARY KEY,
             text VARCHAR NOT NULL,

@@ -4,8 +4,8 @@ import { JwtPayload } from 'jsonwebtoken'
 
 
 export const createServerTable = async () => {
-    (await pool).connect(async connection => {
-        const server = await connection.query(sql`
+    return (await pool).connect(async connection => {
+        return await connection.query(sql`
         CREATE TABLE IF NOT EXISTS servers (
             id serial PRIMARY KEY,
             title VARCHAR NOT NULL UNIQUE,
@@ -20,8 +20,8 @@ export const createServerTable = async () => {
 }
 
 export const createServersUsersTable = async () => {
-    (await pool).connect(async connection => {
-        await connection.query(sql`
+     return (await pool).connect(async connection => {
+        return await connection.query(sql`
             CREATE TABLE IF NOT EXISTS servers_users (
                 server_id INT NOT NULL,
                 user_id INT NOT NULL,
