@@ -25,14 +25,13 @@ export const onConnect = () => {
         socket.data.user = user;
         next();
       } catch (err) {
-        if (err instanceof Error) {
-          console.error(err);
-          console.error("Socket authentication error");
+        if (err) {
+          console.error("[socket]", "Socket:", socket.id, err.toString());
           // next(new Error("Socket Authentication error"));
         }
       }
     } else {
-      console.error("Socket authentication error");
+      console.error(`[socket] Socket: ${socket.id} authentication error: no token`);
       // next(new Error("Socket authentication error"))
     }
   });
