@@ -12,6 +12,7 @@ export default function FormContainer(props: Props) {
       height="100vh"
       justifyContent="center"
       alignItems="center"
+      bg="gray.700"
     >
       <Flex
         direction="column"
@@ -22,7 +23,8 @@ export default function FormContainer(props: Props) {
         border="1px"
         borderColor="gray.100"
         borderRadius={4}
-        boxShadow="lg"
+        boxShadow="dark-lg"
+        bg="gray.400"
       >
         {props.children}
       </Flex>

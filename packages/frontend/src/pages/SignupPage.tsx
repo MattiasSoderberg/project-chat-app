@@ -36,6 +36,7 @@ export default function ChatPage() {
         Sign Up
       </Heading>
       <UserCredetialsForm
+        buttonText="Sign Up"
         username={username}
         password={password}
         onChangeUsername={setUsername}
