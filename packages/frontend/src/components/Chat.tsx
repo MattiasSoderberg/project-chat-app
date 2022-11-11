@@ -51,14 +51,9 @@ export default function Chat(props: {
   const [messageList, dispatch] = useReducer(messageReducer, []);
   const [inputText, setInputText] = useState("");
 
-  const sendMessage = async (
-    text: string,
-    authorId: number,
-    roomId: number
-  ): Promise<void> => {
+  const sendMessage = async (text: string, roomId: number): Promise<void> => {
     const payload = {
       text: text,
-      author: authorId,
       room: roomId,
     };
     setInputText("");
@@ -87,13 +82,14 @@ export default function Chat(props: {
 
   return (
     <>
-      <Box bg="gray.700" height="95vh" width="75vw" p={2} color="white">
+      <Box bg="gray.700" height="95vh" width="75vw">
         {props.room.title ? (
           <Flex direction="column" height="100%">
-            <Heading mb={2}>{props.room.title}</Heading>
+            <Heading p={3} bg="gray.900" color="gray.200">
+              {props.room.title}
+            </Heading>
             <Flex
               direction="column"
-              gap={2}
               overflowY="scroll"
               sx={{
                 "&::-webkit-scrollbar": {
@@ -109,7 +105,7 @@ export default function Chat(props: {
               <MessageList messages={messageList} user={props.user} />
             </Flex>
             <Spacer />
-            <HStack>
+            <HStack p={5}>
               <Input
                 bg="gray.400"
                 color="black"
@@ -118,9 +114,7 @@ export default function Chat(props: {
               />
               <Button
                 colorScheme="blue"
-                onClick={(e) =>
-                  sendMessage(inputText, props.user.id, props.room.id as number)
-                }
+                onClick={(e) => sendMessage(inputText, props.room.id as number)}
                 isDisabled={!inputText}
               >
                 Send
