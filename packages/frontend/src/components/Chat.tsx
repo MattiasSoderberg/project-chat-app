@@ -105,7 +105,7 @@ export default function Chat(props: {
             <Spacer />
             <MessageInputFooter
               text={inputText}
-              roomId={props.room.id as number}
+              room={props.room}
               onChange={setInputText}
               onClick={sendMessage}
             />
