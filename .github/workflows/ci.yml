@@ -18,7 +18,7 @@ jobs:
           node-version: 18.x
           cache: "npm"
       - run: npm ci
-      - run: npm -w packages/backend run lint
-      - run: npm -w packages/backend run test
       - run: npm -w packages/frontend run lint
       - run: npm -w packages/frontend run test
+      - run: npm -w packages/backend run lint
+      - run: npm -w packages/backend run test
