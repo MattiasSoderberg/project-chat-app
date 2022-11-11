@@ -11,7 +11,7 @@ function MessageContainer(props: { children: JSX.Element[]; bgColor: string }) {
       bg={props.bgColor}
       p={3}
       borderBottom="1px"
-      borderColor="gray.800"
+      borderColor="gray.900"
     >
       {props.children}
     </Flex>
@@ -25,7 +25,7 @@ function Message(props: { message: MessageItem; loggedInUser: string }) {
   return (
     <>
       {props.message.author.toString() !== props.loggedInUser.toString() ? (
-        <MessageContainer bgColor="gray.700">
+        <MessageContainer bgColor="gray.800">
           <HStack>
             {props.message.author.toString() !==
             props.loggedInUser.toString() ? (
@@ -44,7 +44,7 @@ function Message(props: { message: MessageItem; loggedInUser: string }) {
           <Text>{props.message.text}</Text>
         </MessageContainer>
       ) : (
-        <MessageContainer bgColor="gray.600">
+        <MessageContainer bgColor="gray.700">
           <HStack>
             {props.message.author.toString() !==
             props.loggedInUser.toString() ? (

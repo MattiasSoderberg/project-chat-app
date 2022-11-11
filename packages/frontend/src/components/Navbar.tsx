@@ -19,7 +19,7 @@ export default function Navbar(props: { username: string }) {
       alignItems="center"
     >
       <Heading color="gray.300">Hi {props.username}!</Heading>
-      <Button color="black" onClick={handleLogout}>
+      <Button color="black" size="sm" onClick={handleLogout}>
         Log Out
       </Button>
     </Flex>
