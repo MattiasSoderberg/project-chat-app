@@ -35,6 +35,7 @@ export default function LoginPage() {
         Login
       </Heading>
       <UserCredetialsForm
+        buttonText="Login"
         username={username}
         password={password}
         onChangeUsername={setUsername}

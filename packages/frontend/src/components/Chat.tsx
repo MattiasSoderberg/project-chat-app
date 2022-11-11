@@ -1,19 +1,11 @@
 import React, { useState, useEffect, useReducer } from "react";
 import axios, { AxiosError } from "axios";
-import {
-  Heading,
-  Input,
-  Button,
-  Box,
-  Flex,
-  Text,
-  HStack,
-  Spacer,
-} from "@chakra-ui/react";
+import { Heading, Box, Flex, Text, Spacer } from "@chakra-ui/react";
 import { MessageItem, RoomItem } from "@chat-app/shared";
 import MessageList from "../components/MessageList";
 import { userType } from "../pages/HomePage";
 import { Socket } from "socket.io-client";
+import MessageInputFooter from "./MessageInputFooter";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.request.use((config) => {
@@ -51,14 +43,9 @@ export default function Chat(props: {
   const [messageList, dispatch] = useReducer(messageReducer, []);
   const [inputText, setInputText] = useState("");
 
-  const sendMessage = async (
-    text: string,
-    authorId: number,
-    roomId: number
-  ): Promise<void> => {
+  const sendMessage = async (text: string, roomId: number): Promise<void> => {
     const payload = {
       text: text,
-      author: authorId,
       room: roomId,
     };
     setInputText("");
@@ -87,13 +74,20 @@ export default function Chat(props: {
 
   return (
     <>
-      <Box bg="gray.700" height="95vh" width="75vw" p={2} color="white">
+      <Box
+        bg="gray.800"
+        height="95vh"
+        width="100%"
+        borderLeft="2px"
+        borderColor="gray.900"
+      >
         {props.room.title ? (
           <Flex direction="column" height="100%">
-            <Heading mb={2}>{props.room.title}</Heading>
+            <Heading p={3} bg="gray.900" color="gray.200">
+              {props.room.title}
+            </Heading>
             <Flex
               direction="column"
-              gap={2}
               overflowY="scroll"
               sx={{
                 "&::-webkit-scrollbar": {
@@ -109,26 +103,17 @@ export default function Chat(props: {
               <MessageList messages={messageList} user={props.user} />
             </Flex>
             <Spacer />
-            <HStack>
-              <Input
-                bg="gray.400"
-                color="black"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-              />
-              <Button
-                colorScheme="blue"
-                onClick={(e) =>
-                  sendMessage(inputText, props.user.id, props.room.id as number)
-                }
-                isDisabled={!inputText}
-              >
-                Send
-              </Button>
-            </HStack>
+            <MessageInputFooter
+              text={inputText}
+              roomId={props.room.id as number}
+              onChange={setInputText}
+              onClick={sendMessage}
+            />
           </Flex>
         ) : (
-          <Text>Enter a room to chat!</Text>
+          <Box p={5} color="gray.400">
+            <Text>Enter a room to chat!</Text>
+          </Box>
         )}
       </Box>
     </>
