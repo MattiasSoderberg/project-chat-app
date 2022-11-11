@@ -2,7 +2,7 @@ FROM node:16-alpine
 
 WORKDIR /usr/src/app
 
-COPY /package*.json ./
+COPY ./package*.json ./
 COPY ./packages/backend/package*.json ./packages/backend/
 COPY ./packages/shared/package*.json ./packages/shared/
 
@@ -11,14 +11,18 @@ RUN npm ci -w packages/backend
 COPY ./packages/backend ./packages/backend
 COPY ./packages/shared ./packages/shared
 
-ARG POSTGRES_USER
-ARG POSTGRES_PASSWORD
-ARG POSTGRES_DB
-ENV POSTGRES_USER=${POSTGRES_USER}
-ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-ENV POSTGRES_DB={POSTGRES_DB}
+ARG POSTGRES_URI
+ARG JWT_SECRET
+ARG PORT
+ARG CORS_ORIGIN
+
+ENV POSTGRES_URI${POSTGRES_URI}
+ENV JWT_SECRET=${JWT_SECRET}
+ENV PORT=${PORT}
+ENV CORS_ORIGIN=${CORS_ORIGIN}
+
 RUN npm run build -w packages/backend
 
-EXPOSE 5000
+EXPOSE 5000:3000
 
 CMD [ "node", "packages/backend/dist/app.js" ]
