@@ -1,4 +1,3 @@
-import { JwtPayload } from "jsonwebtoken";
 import { createSlug } from "../middlewares/helpers";
 import { getAllRooms, createRoom, getRoomById, getRoomsByServer } from "../models/rooms-repository";
 

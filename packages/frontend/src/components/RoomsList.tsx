@@ -47,7 +47,7 @@ export default function RoomsList(props: {
                       alignSelf="start"
                       _hover={{ bg: "gray.600", color: "gray.100" }}
                       key={room.id}
-                      onClick={(e) => props.setCurrentRoom(room)}
+                      onClick={() => props.setCurrentRoom(room)}
                     >
                       {room.title}
                     </Button>
@@ -65,7 +65,7 @@ export default function RoomsList(props: {
               color="gray.50"
               boxShadow="inner"
               _hover={{ bg: "gray.300", color: "black" }}
-              onClick={(e) => props.setShowRoomModal(true)}
+              onClick={() => props.setShowRoomModal(true)}
             >
               Create Room
             </Button>

@@ -1,10 +1,8 @@
 import { Server } from "socket.io";
 import { server } from "./app";
-import { socketAuth } from "./middlewares/auth";
 import { verify, JwtPayload } from "jsonwebtoken";
 import {
   loadMessagesByRoom,
-  loadMessageById,
 } from "./services/messages-services";
 import dotenv from "dotenv";
 
@@ -14,12 +12,9 @@ export const onConnect = () => {
   const io = new Server(server, {
     cors: { origin: process.env.CORS_ORIGIN, credentials: true },
   });
-  // Move to auth.ts
   io.use((socket, next) => {
     const token: string = socket.handshake.auth.token;
-    console.log("in socketAuth", token);
     if (token) {
-      console.log("in if token", token);
       try {
         const user = verify(
           token,
@@ -30,17 +25,14 @@ export const onConnect = () => {
       } catch (err) {
         if (err) {
           console.error("[socket]", "Socket:", socket.id, err.toString());
-          // next(new Error("Socket Authentication error"));
         }
       }
     } else {
       console.error(
         `[socket] Socket: ${socket.id} authentication error: no token`
       );
-      // next(new Error("Socket authentication error"))
     }
   });
-  // io.use(socketAuth)
   io.on("connection", async (socket) => {
     console.log("Client connected:", socket.data.user);
 

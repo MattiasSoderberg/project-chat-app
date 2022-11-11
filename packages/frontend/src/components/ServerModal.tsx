@@ -28,7 +28,8 @@ export default function ServerModal(props: {
   username: string;
   setShowServerModal: React.Dispatch<React.SetStateAction<boolean>>;
   setServers: React.Dispatch<React.SetStateAction<ServerItem[]>>;
-  fetchServers: any; // Fix to something more right than any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fetchServers: any;
 }) {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
@@ -41,7 +42,7 @@ export default function ServerModal(props: {
       await axios.post("/servers", payload);
       props.setShowServerModal(false);
       props.setServers(await props.fetchServers());
-    } catch (err: any) {
+    } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data as string);
       }
@@ -70,9 +71,9 @@ export default function ServerModal(props: {
           mb={5}
         />
         <HStack mb={5}>
-          <Button onClick={(e) => createServer(title)}>Create Server</Button>
+          <Button onClick={() => createServer(title)}>Create Server</Button>
           <Spacer />
-          <Button onClick={(e) => props.setShowServerModal(false)}>
+          <Button onClick={() => props.setShowServerModal(false)}>
             Close
           </Button>
         </HStack>
