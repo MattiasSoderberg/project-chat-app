@@ -24,7 +24,7 @@ export default function RoomsList(props: {
   socket: Socket;
 }) {
   return (
-    <Box height="95vh" width="15vw" bg="gray.200" p={2}>
+    <Box height="95vh" width="15vw" bg="gray.400" p={5}>
       {props.currentServer.title ? (
         <VStack height="100%">
           <Heading as="h2" size="lg">
@@ -34,6 +34,7 @@ export default function RoomsList(props: {
             props.rooms.map((room) => {
               return (
                 <Button
+                  _hover={{ bg: "gray.600", color: "gray.100" }}
                   key={room.id}
                   onClick={(e) => props.setCurrentRoom(room)}
                 >
@@ -45,7 +46,12 @@ export default function RoomsList(props: {
             <Text>No Availabe Rooms</Text>
           )}
           <Spacer />
-          <Button onClick={(e) => props.setShowRoomModal(true)}>
+          <Button
+            bg="gray.600"
+            color="gray.100"
+            _hover={{ bg: "gray.100", color: "black" }}
+            onClick={(e) => props.setShowRoomModal(true)}
+          >
             Create Room
           </Button>
         </VStack>
