@@ -32,7 +32,7 @@ export default function UserCredetialsForm(props: Props) {
         bg="gray.600"
         color="white"
         _hover={{ bg: "gray.100", color: "black" }}
-        onClick={(e) => props.onSend(props.username, props.password)}
+        onClick={() => props.onSend(props.username, props.password)}
       >
         {props.buttonText}
       </Button>

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { deleteUserByUsername, getUsers } from "../models/users-repository";
+import { getUsers } from "../models/users-repository";
 import {
   deleteUser,
   loadLoggedInUser,

@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import { JwtPayload } from "jsonwebtoken";
 import { auth } from "../middlewares/auth";
 import {
   loadAllRooms,

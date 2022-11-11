@@ -28,7 +28,8 @@ export default function RoomModal(props: {
   server: ServerItem;
   setShowRoomModal: React.Dispatch<React.SetStateAction<boolean>>;
   setRooms: React.Dispatch<React.SetStateAction<RoomItem[]>>;
-  fetchRoomsOnServer: any; // Fix to something more right than any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fetchRoomsOnServer: any;
 }) {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
@@ -42,7 +43,8 @@ export default function RoomModal(props: {
       await axios.post("/rooms", payload);
       props.setShowRoomModal(false);
       props.setRooms(await props.fetchRoomsOnServer(payload.serverId))
-    } catch (err: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data as string);
       }
@@ -63,11 +65,11 @@ export default function RoomModal(props: {
           mb={5}
         />
         <HStack mb={5}>
-          <Button onClick={(e) => createRoom(title)}>
+          <Button onClick={() => createRoom(title)}>
             Create Room
           </Button>
           <Spacer />
-          <Button onClick={(e) => props.setShowRoomModal(false)}>Close</Button>
+          <Button onClick={() => props.setShowRoomModal(false)}>Close</Button>
         </HStack>
         {error && <Text color="red.600">{error}</Text>}
       </Box>

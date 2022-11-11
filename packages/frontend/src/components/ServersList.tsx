@@ -21,7 +21,7 @@ export default function ServersList(props: {
                 alignSelf="start"
                 _hover={{ bg: "gray.600", color: "gray.200" }}
                 key={server.id}
-                onClick={(e) => props.onClick(server)}
+                onClick={() => props.onClick(server)}
               >
                 {server.title}
               </Button>
@@ -36,7 +36,7 @@ export default function ServersList(props: {
           color="gray.50"
           boxShadow="inner"
           _hover={{ bg: "gray.300", color: "black" }}
-          onClick={(e) => props.setShowServerModal(true)}
+          onClick={() => props.setShowServerModal(true)}
         >
           Create Server
         </Button>

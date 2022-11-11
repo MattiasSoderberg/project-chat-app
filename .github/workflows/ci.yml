@@ -18,7 +18,7 @@ jobs:
           node-version: 18.x
           cache: "npm"
       - run: npm ci
-      # - run: npm -w packages/backend run lint:nowarnings
+      - run: npm -w packages/backend run lint
       - run: npm -w packages/backend run test
-      # - run: npx -w packages/frontend eslint . --max-warnings=0
+      - run: npx -w packages/frontend run lint
       - run: npm -w packages/frontend run test

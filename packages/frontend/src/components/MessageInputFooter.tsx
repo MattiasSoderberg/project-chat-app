@@ -23,7 +23,7 @@ export default function MessageInputFooter(props: Props) {
       <Button
         px={5}
         colorScheme="blue"
-        onClick={(e) => props.onClick(props.text, props.room.id as number)}
+        onClick={() => props.onClick(props.text, props.room.id as number)}
         isDisabled={!props.text}
         data-testid="message-button"
       >
