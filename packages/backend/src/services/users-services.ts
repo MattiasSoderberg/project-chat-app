@@ -3,6 +3,7 @@ import { hash, compare } from "bcryptjs";
 import { JwtPayload, sign } from "jsonwebtoken";
 import {
   createUser,
+  deleteUserByUsername,
   getUserByUsername,
   getUserByUsernameWithPassword,
 } from "../models/users-repository";
@@ -36,4 +37,8 @@ export const loginUser = async (userCredetials: UserCredentials) => {
 export const loadLoggedInUser = async (user: JwtPayload) => {
   const logginUser = await getUserByUsername(user.username);
   return logginUser;
+};
+
+export const deleteUser = async (username: string) => {
+  return await deleteUserByUsername(username);
 };

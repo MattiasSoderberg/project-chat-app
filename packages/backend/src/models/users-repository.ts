@@ -55,26 +55,31 @@ export const getUserByUsername = async (username: string) => {
 export const getUserByUsernameWithPassword = async (username: string) => {
   return (await pool).connect(async (connection) => {
     try {
-        return await connection.one(
-          sql`SELECT * FROM users WHERE username = ${username}`
-        );
+      return await connection.one(
+        sql`SELECT * FROM users WHERE username = ${username}`
+      );
     } catch (err) {
-        if (err instanceof NotFoundError) {
-            console.log(err.message)
-        } else (
-            console.log(err)
-        )
+      if (err instanceof NotFoundError) {
+        console.log(err.message);
+      } else console.log(err);
     }
   });
 };
 
 export const getUserByUsernameWithMessages = async (username: string) => {
-  // TODO fix messages returned from db
   return (await pool).connect(async (connection) => {
     return await connection.one(sql`SELECT users.id, users.username, users.created_at, messages.text
         FROM users
         LEFT JOIN messages
         ON users.username = messages.author
         WHERE users.username = ${username}`);
+  });
+};
+
+export const deleteUserByUsername = async (username: string) => {
+  return (await pool).connect(async (connection) => {
+    return await connection.one(
+      sql`DELETE FROM users WHERE username = ${username} RETURNING *`
+    );
   });
 };
