@@ -20,5 +20,5 @@ jobs:
       - run: npm ci
       - run: npm -w packages/backend run lint
       - run: npm -w packages/backend run test
-      - run: npx -w packages/frontend run lint
+      - run: npm -w packages/frontend run lint
       - run: npm -w packages/frontend run test
