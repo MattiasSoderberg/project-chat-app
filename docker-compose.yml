@@ -32,6 +32,9 @@ services:
         API_URL: http://localhost:5000
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
+    command: ["npx", "serve", "packages/frontend/build"]
 
 volumes:
   postgres:
