@@ -2,10 +2,13 @@ import { Server } from "socket.io";
 import { server } from "./app";
 import { socketAuth } from "./middlewares/auth";
 import { verify, JwtPayload } from "jsonwebtoken";
-import { loadMessagesByRoom, loadMessageById } from "./services/messages-services";
-import dotenv from 'dotenv'
+import {
+  loadMessagesByRoom,
+  loadMessageById,
+} from "./services/messages-services";
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 export const onConnect = () => {
   const io = new Server(server, {
@@ -31,7 +34,9 @@ export const onConnect = () => {
         }
       }
     } else {
-      console.error(`[socket] Socket: ${socket.id} authentication error: no token`);
+      console.error(
+        `[socket] Socket: ${socket.id} authentication error: no token`
+      );
       // next(new Error("Socket authentication error"))
     }
   });
@@ -46,17 +51,16 @@ export const onConnect = () => {
           socket.leave(currentRoom);
         }
         socket.join(roomId);
-        console.log(`[socket] ${socket.data.user.username} joined room ${roomId}`);
+        console.log(
+          `[socket] ${socket.data.user.username} joined room ${roomId}`
+        );
         const messages = await loadMessagesByRoom(roomId);
         socket.emit("messages", messages);
       }
     });
 
     socket.on("message", async (roomId, message) => {
-      const messages = await loadMessagesByRoom(roomId);
-      socket.to(roomId).emit("messages", messages);
-      const newMessage = await loadMessageById(message.id)
-      socket.emit("message", newMessage);
+      io.to(roomId).emit("message", message);
     });
 
     socket.on("disconnecting", () => {
